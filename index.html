@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CrossRef Work</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>{{.Title}}</h1>
+
+    <div id="copy-status">
+    </div>
+
+    <div id="result">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>key</th>
+                <th>DOI</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Refs}}
+            <tr>
+                <td>
+                    {{if not (eq .DOI "")}}
+                    <a id="fetch-bibtex" href="/bibtex/{{.DOI}}">{{.Key}}</a>
+                    {{else}}
+                    no doi
+                    {{end}}
+                </td>
+                <td>{{.DOI}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</body>
+
+</html>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#fetch-bibtex', function (event) {
+            $(window).scrollTop(0);
+
+            // Prevent the default anchor behavior
+            event.preventDefault();
+
+            // Get the href attribute value
+            const url = $(this).attr('href');
+
+            // Make the GET request
+            $.get(url, function (data) {
+                // Display the result inside the #result div
+                $('#result').html(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+
+                navigator.clipboard.writeText(data).then(function () {
+                    $('#copy-status').text('✅');
+                }).catch(function (err) {
+                    console.error('Failed to copy: ', err);
+                    $('#copy-status').text('❌');
+                });
+            }).fail(function () {
+                // Handle errors
+                $('#result').html('<p>Error fetching data</p>');
+            });
+        });
+    });
+</script>

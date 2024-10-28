@@ -1,0 +1,4 @@
+github.com/caltechlibrary/crossrefapi v1.0.7 h1:5ENH6TkeObClqJJtlomcj7EtRn6FG/l4PN8sMULCC3g=
+github.com/caltechlibrary/crossrefapi v1.0.7/go.mod h1:faIavFUD3wzlYceE4lknT9+taxVGERhUTIeNKrPnU8M=
+github.com/caltechlibrary/doitools v0.0.2 h1:bGFbvEo9scKlYHCAgZCrQO63GwZZDTL7siT0rVTYwmc=
+github.com/caltechlibrary/doitools v0.0.2/go.mod h1:fk83G4/el4EgvWxCwZLAeXvqzL816LdrFCHrkg7Zpp0=
