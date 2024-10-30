@@ -4,10 +4,51 @@
 <head>
     <title>CrossRef Work</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        #notification {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            width: 200px;
+            z-index: 105;
+            text-align: center;
+            font-weight: normal;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            padding: 5px;
+        }
+
+        #notification.error {
+            background-color: #FF0000;
+        }
+
+        #notification.ok {
+            background-color: #00FF00;
+        }
+
+        #notification span.dismiss {
+            border: 2px solid #FFF;
+            padding: 0 5px;
+            cursor: pointer;
+            float: right;
+            margin-right: 10px;
+        }
+
+        #notification a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold
+        }
+    </style>
 </head>
 
 <body>
     <h1>{{.Title}}</h1>
+
+    <div id="notification" style="display: none;">
+        <!-- <span class="dismiss"><a title="dismiss this notification">x</a></span> -->
+    </div>
 
     <div id="copy-status">
     </div>
@@ -43,8 +84,23 @@
 
 <script>
     $(document).ready(function () {
+        const notify = (message, notiClass) => {
+            $("#notification").addClass(notiClass);
+            $("#notification").fadeIn("slow").append(message);
+            const close = () => {
+                $("#notification").fadeOut("slow");
+                $("#notification").removeClass("error ok");
+                $("#notification").empty();
+            };
+
+            setTimeout(close, 2000);
+        };
+
+        $(document).on('click', '#test-notification', function (event) {
+            notify("this is a test notification");
+        });
         $(document).on('click', '#fetch-bibtex', function (event) {
-            $(window).scrollTop(0);
+            // $(window).scrollTop(0);
 
             // Prevent the default anchor behavior
             event.preventDefault();
@@ -55,17 +111,18 @@
             // Make the GET request
             $.get(url, function (data) {
                 // Display the result inside the #result div
-                $('#result').html(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
+                // $('#result').html(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
 
                 navigator.clipboard.writeText(data).then(function () {
-                    $('#copy-status').text('✅');
+                    notify("Copied to clipboard ✅", 'ok');
                 }).catch(function (err) {
                     console.error('Failed to copy: ', err);
-                    $('#copy-status').text('❌');
+                    notify("Failed to copy ❌", 'error');
                 });
             }).fail(function () {
                 // Handle errors
-                $('#result').html('<p>Error fetching data</p>');
+                notify("Error fetching data ❌", 'error');
+                // $('#result').html('<p>Error fetching data</p>');
             });
         });
     });
