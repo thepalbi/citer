@@ -40,11 +40,18 @@
             text-decoration: none;
             font-weight: bold
         }
+
+        .inline {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 
 <body>
-    <h1>{{.Title}}</h1>
+    <div class="inline">
+        <h1>{{.Title}}</h1> <a style="margin-left: 10px;" id="fetch-bibtex" href="/bibtex/{{.DOI}}">(bibtex)</a>
+    </div>
 
     <div id="notification" style="display: none;">
         <!-- <span class="dismiss"><a title="dismiss this notification">x</a></span> -->
@@ -110,9 +117,6 @@
 
             // Make the GET request
             $.get(url, function (data) {
-                // Display the result inside the #result div
-                // $('#result').html(`<pre>${JSON.stringify(data, null, 2)}</pre>`);
-
                 navigator.clipboard.writeText(data).then(function () {
                     notify("Copied to clipboard ✅", 'ok');
                 }).catch(function (err) {
@@ -122,7 +126,6 @@
             }).fail(function () {
                 // Handle errors
                 notify("Error fetching data ❌", 'error');
-                // $('#result').html('<p>Error fetching data</p>');
             });
         });
     });

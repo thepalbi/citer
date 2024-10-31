@@ -69,9 +69,11 @@ func main() {
 
 		data := struct {
 			Title string
+			DOI   string
 			Refs  []singleRef
 		}{
 			Title: strings.Join(works.Message.Title, " "),
+			DOI:   doi,
 			Refs:  collectedRefs,
 		}
 		if err := tmpl.Execute(w, data); err != nil {
